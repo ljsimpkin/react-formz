@@ -1,84 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-
-function calculateBmi(height, weight) {
-  return (weight / Math.pow( (height/100), 2 )).toFixed(1)
-}
-
-// Predictability
-// export function calcPFPredicted ( height, age, gender ) {
-//   /*
-//   Source URL: http://reference.medscape.com/calculator/peak-expiratory-flow
-//   PEFFemale = e((0.376*ln(Age))-(0.012*Age)-(58.8/Height)+5.63)
-//   PEFMale = e((0.544*ln(Age))-(0.0151*Age)-(74.7/Height)+5.48)
-//   */
-//  console.log('calcPFPredicted', height, age, gender)
-//   if (!height || !age || !gender) return
-//   const MALE = 1
-//   const CHILD_CUTOFF_AGE = 15
-
-//   let pefr = null
-//   if ((height > 0) && (age > 0)) {
-//     if (age >= CHILD_CUTOFF_AGE) {
-//       if ((gender === MALE) || (gender === "M")) {
-//         pefr = Math.exp(((0.544 * Math.log(age)) - (0.0151 * age) - (74.7 / height)) + 5.48)
-//       } else {
-//         pefr = Math.exp(((0.376 * Math.log(age)) - (0.0120 * age) - (58.8 / height)) + 5.63)
-//       }
-//     } else {
-//       // Child - Equation formed from the figures we have by Prof Taylor.
-//       if (height > 90) {
-//         pefr = (5.2598 * height) - 427.56
-//       } else {
-//         pefr = 'n/a'
-//       }
-//     }
-//     // FIXME: I have no idea why this formatting code is here; presume it should be removed
-//     if (height > 90) {
-//       pefr = pefr.toFixed()
-//     } else {
-//       pefr
-//     }
-//   }
-//   return pefr
-// }
-
-function calcPFPercentagePredicted( current_pefr, highest_home_pefr, predicted_pefr ) {
-  let pefr_percentage_predicted = null
-  const pefr = parseFloat(current_pefr);
-  const home_pefr = parseFloat(highest_home_pefr);
-  // Caro&Laura want always use current_pefr to calculation pefr_percentage_predicted
-  // pefr = home_pefr if isNaN(pefr) || home_pefr > pefr      
-  const pred = parseFloat(predicted_pefr);
-  if ((pefr > 0) && (pred > 0)) {
-    pefr_percentage_predicted = Math.round((pefr / pred) * 100);        
-  }
-  return pefr_percentage_predicted;
-}
-
-// PEFR Variability %
-function calcPFVariability( lowest_home_pefr, highest_home_pefr ) {
-  let pefr_variability = null
-  const low = parseFloat(lowest_home_pefr);
-  const high = parseFloat(highest_home_pefr);
-  if ((high > 0) && (low > 0)) {
-    const average = (high + low) / 2;
-    const remainder = high - low;
-    pefr_variability = Math.round((remainder / average) * 100);
-  }
-  return pefr_variability;
-}
-
-// PEFR Reversibility %
-function calcPFReversibility( post_bronchodilator, current_pefr ) {
-  let pefr_reversibility = null
-  const post = parseFloat(post_bronchodilator);
-  const current = parseFloat(current_pefr);
-  if ((post > 0) && (current > 0)) {
-    pefr_reversibility = Math.round(((post - current) *100) / current);
-  }
-  return pefr_reversibility;
-}
+import {calculateBmi, calcPFPercentagePredicted, calcPFReversibility, calcPFVariability} from "./utils/calculators.js"
 
 function fieldCalculations(data){
   let bmi = calculateBmi(data.height, data.weight)
@@ -97,7 +19,6 @@ function App() {
     let updatedCalculations = fieldCalculations(newData)
     setData({...updatedCalculations})
   }
-
 
   return (
     <div className="App">
